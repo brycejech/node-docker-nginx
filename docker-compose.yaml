@@ -1,0 +1,27 @@
+
+version: '3'
+
+services:
+    express:
+        # Where to build from
+        build: server/
+        # What to name the image
+        # If build key not present, looks for image "express"
+        image: express
+        # What to name the container
+        container_name: express
+        restart: always
+    nginx:
+        build: nginx/
+        image: rev-proxy
+        container_name: rev-proxy
+        # Wait for express service before starting
+        depends_on:
+            - express
+        # What ports to open
+        ports:
+            - "80:80"
+        restart: always
+        # Allow nginx service to talk to express service
+        links:
+            - express
